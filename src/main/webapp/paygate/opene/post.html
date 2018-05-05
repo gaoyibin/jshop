@@ -1,0 +1,272 @@
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+	<meta http-equiv="Expires" CONTENT="0">
+	<meta http-equiv="Cache-Control" CONTENT="no-cache">
+	<meta http-equiv="Pragma" CONTENT="no-cache">
+	<title>开联网上支付平台-商户接口范例-支付请求</title>
+	<link href="css.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+<form name="form1" action="post.jsp" method="post" onsubmit="validate()">
+	<table class="table_box" width="100%">
+		<tr>
+			<td style="padding-left:20px;">
+				<table class="table_box" width="90%">
+					<tr>
+						<td colspan="4" class="tit_bar">支付请求</td>
+					</tr>
+					<tr>
+						<td width="5%">&nbsp;</td>
+						<td width="15%">提交地址:</td>
+						<td width="30%">
+							<input type="text" name="serverUrl" id="serverUrl" value="http://opsweb.koolyun.cn/gateway/index.do?"  size="50"/>
+						</td>
+						<td class="comment">(提交地址："https://"+ip+"/gateway/index.do?")</td>
+					</tr>
+					<tr>
+						<td>&nbsp;</td>
+						<td>MD5 key:</td>
+						<td><input type="text" name="key" id="key" value="1234567890"/></td>
+						<td class="comment">计算签名的KEY值，在商户管理平台维护</td>
+					</tr>
+					<tr>
+						<td width="5%">1</td>
+						<td width="15%" height="50">编码:</td>
+						<td width="30%"><input type="text" name="inputCharset" id="inputCharset" value="1"/></td>
+						<td class="comment">不可空，固定选择值：1、2、3。1代表UTF-8; 2代表GBK; 3代表GB2312</td>
+					</tr>
+					<tr>
+						<td>2</td>
+						<td>取货地址:</td>
+						<td width="40%"><input type="text" name="pickupUrl" id="pickupUrl" value="http://商户服务器域名/api-demo/pickup.jsp" size="50"//></td>
+						<td class="comment">客户的取货地址，需http://格式的完整路径，不能加?id=123这类自定义参数</td>
+					</tr>
+					<tr>
+						<td>3</td>
+						<td>商户系统通知地址:</td>
+						<td width="40%"><input type="text" name="receiveUrl" id="receiveUrl" value="http://商户服务器域名/api-demo/receive.jsp" size="50"//></td>
+						<td class="comment">不可空,通知商户网站支付结果的url地址，需http://格式的完整路径，不能加?id=123这类自定义参数</td>
+					</tr>
+					<tr>
+						<td>4</td>
+						<td width="15%">报文版本号:</td>
+						<td width="30%">
+							<input type="text" name="version" id="version" value="v1.0"/>
+						</td>
+						<td class="comment">不可空，1.0版本填固定值：v1.0区分大小写</td>
+					</tr>
+					<tr>
+						<td>5</td>
+						<td>语言:</td>
+						<td><input type="text" name="language" id="language" value="1"/></td>
+						<td class="comment">不可空，固定值：1，代表中文</td>
+					</tr>
+					<tr>
+						<td>6</td>
+						<td>签名方式:</td>
+						<td><input type="text" name="signType" id="signType" value="1"/></td>
+						<td class="comment">不可空，以上所有非空参数及其值与密钥组合，经加密后生成。</td>
+					</tr>
+					<tr>
+						<td>7</td>
+						<td>商户号:</td>
+						<td>
+							<input type="text" name="merchantId" id="merchantId" value="100020091219001"/>
+						</td>
+						<td class="comment">不可空，由开联支付统一分配</td>
+					</tr>
+					<tr>
+						<td>8</td>
+						<td>付款人名称:</td>
+						<td><input type="text" name="payerName" id="payerName" value=""/></td>
+						<td class="comment">英文或中文字符,支付时在收银台显示</td>
+					</tr>
+					<tr>
+						<td>9</td>
+						<td>付款人联系email:</td>
+						<td><input type="text" name="payerEmail" id="payerEmail" value=""/></td>
+						<td class="comment">字符串</td>
+					</tr>
+					<tr>
+						<td>10</td>
+						<td>付款人电话:</td>
+						<td><input type="text" name="payerTelephone" id="payerTelephone" value=""/></td>
+						<td class="comment">字符串</td>
+					</tr>
+					<tr>
+						<td>11</td>
+						<td>商户系统订单号:</td>
+						<td><input type="text" name="orderNo" id="orderNo" value="NO2008120900001"/> <input type="button" value="刷新订单号" onclick="setOrderNo();"/></td>
+						<td class="comment">不可空，商户网站订单系统中唯一订单号.只允许使用字母、数字、- 、_,并以字母或数字开头，长度小于50</td>
+					</tr>
+					<tr>
+						<td>12</td>
+						<td>订单金额(精确到分):</td>
+						<td><input type="text" name="orderAmount" id="orderAmount" value="1"/></td>
+						<td class="comment">不可空，整型数字，以分为单位</td>
+					</tr>
+					<tr>
+						<td>13</td>
+						<td>金额币种:</td>
+						<td><input type="text" name="orderCurrency" id="orderCurrency" value="156"/></td>
+						<td class="comment">不可空，156代表人民币；840代表美元；344代表港元</td>
+					</tr>
+					<tr>
+						<td>14</td>
+						<td>商户的订单创建时间:</td>
+						<td><input type="text" name="orderDatetime" id="orderDatetime" value="20081209133632"/></td>
+						<td class="comment">不可空，一共14位 格式为：YYYYMMDDHHssmm例如：20071117020101</td>
+					</tr>
+					<tr>
+						<td>15</td>
+						<td>订单过期时间:</td>
+						<td><input type="text" name="orderExpireDatetime" id="orderExpireDatetime" value=""/></td>
+						<td class="comment">可空</td>
+					</tr>
+					<tr>
+						<td>16</td>
+						<td>商品名称:</td>
+						<td><input type="text" name="productName" id="productName" value="笔记本电脑"/></td>
+						<td class="comment">不可空，英文或中文字符串,支付时在收银台显示</td>
+					</tr>
+					<tr>
+						<td>17</td>
+						<td>商品单价:</td>
+						<td><input type="text" name="productPrice" id="productPrice" value="100"/></td>
+						<td class="comment">整型数字</td>
+					</tr>
+					<tr>
+						<td>18</td>
+						<td>商品数量:</td>
+						<td><input type="text" name="productNum" id="productNum" value="1"/></td>
+						<td class="comment">整型数字，支付时在收银台显示</td>
+					</tr>
+					<tr>
+						<td>19</td>
+						<td>商品代码:</td>
+						<td><input type="text" name="productId" id="productId" value="P1005001"/></td>
+						<td class="comment">字母、数字或 - 、_ 的组合。用于使用产品数据中心的产品数据，或用于市场活动的优惠
+						</td>
+					</tr>
+					<tr>
+						<td>20</td>
+						<td>商品描述:</td>
+						<td><input type="text" name="productDesc" id="productDesc" value="商品描述中文测试"/></td>
+						<td class="comment">英文或中文字符串</td>
+					</tr>
+					<tr>
+						<td>21</td>
+						<td>附加参数1:</td>
+						<td><input type="text" name="ext1" id="ext1" value="附加参数1"/></td>
+						<td class="comment">英文或中文字符串支付完成后，按照原样返回给商户</td>
+					</tr>
+					<tr>
+						<td>22</td>
+						<td>附加参数2:</td>
+						<td><input type="text" name="ext2" id="ext2" value="附加参数2"/></td>
+						<td class="comment">英文或中文字符串支付完成后，按照原样返回给商户</td>
+					</tr>
+					<tr>
+						<td>23</td>
+						<td>支付方式:</td>
+						<td><input type="text" name="payType" id="payType" value="0"/></td>
+						<td class="comment">不可空，固定选择值：0、1、2、3。0代表不指定支付方式；1代表网银支付；31代表银联认证支付。
+						</td>
+					</tr>
+					<tr>
+						<td>24</td>
+						<td>发卡行机构号:</td>
+						<td><input type="text" name="issuerId" id="issuerId" value="" />
+						<td class="comment">银行或机构代码，用于指定支付使用的付款方机构，例如直连</td>
+					</tr>
+					<tr>
+						<td>25</td>
+						<td>业务扩展字段:</td>
+						<td><input type="text" name="extTL" id="extTL" value=""/></td>
+
+						<td class="comment">规则说明:<br>
+							1)	按固定金额分账时，总金额不超过该笔订单金额；按比例分账时，总百分比不超过100%；<br>
+							2)	最多可配置10个开联账户号；<br>
+							3)	因分账配置不合法导致无法正常分账的，该笔订单金额将划至商户的余额账户中<br>
+							<br>
+							范例：
+							<br>
+							1)	&lt;A00001&gt;1|10203040506070809001,1000|10203040506070809002,200&lt;/A00001&gt; <br>
+							表示按固定金额分账，开联账户10203040506070809001分10元，开联账户10203040506070809002分2元。<br>
+							<br>
+							2)	&lt;A00001&gt;2|10203040506070809001,10|10203040506070809002,0.5&lt;/A00001&gt;<br>
+							表示按比例分账，开联账户10203040506070809001分10%，开联账户10203040506070809002分0.5%<br>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="4" align="center"><input type="submit" name="确认支付" value="确认支付"/></td>
+					</tr>
+				</table>
+			</td></tr>
+	</table>
+</form>
+</body>
+<script language="javascript">
+	setOrderNo();
+	function setOrderNo() {
+		var curr = new Date();
+		var m = curr.getMonth() + 1;
+		if (m < 10) {m = '0' + m;}
+		var d = curr.getDate();
+		if (d < 10) {d = '0' + d;}
+		var h = curr.getHours();
+		if (h < 10) {h = '0' + h;}
+		var mi = curr.getMinutes();
+		if (mi < 10) {mi = '0' + mi;}
+		var s = curr.getSeconds();
+		if (s < 10) {s = '0' + s;}
+		var strDatetime = '' + curr.getFullYear() + m + d + h + mi + s;
+		document.getElementById("orderDatetime").value = strDatetime;
+		document.getElementById("orderNo").value = 'NO' + strDatetime;
+	}
+	function validate() {
+		var version=document.getElementById("version").value;
+		if(null==version || ''==version){
+			alert('错误提示：版本号不能为空');
+			return false;
+		}
+		var merchantId=document.getElementById("merchantId").value;
+		if(null==merchantId || ''==merchantId){
+			alert('错误提示：商户号不能为空');
+			return false;
+		}
+		var receiveUrl=document.getElementById("receiveUrl").value;
+		if(receiveUrl==null || receiveUrl==''){
+			alert('错误提示：receiveUrl不能为空');
+			return false;
+		}
+		var payType=document.getElementById("payType").value;
+		if(null==payType&&''==payType){
+			alert('错误提示：支付方式不能为空');
+			return false;
+		}
+		var signType=document.getElementById("signType").value;
+		if(null==signType && ''==signType){
+			alert('错误提示：签名方式不能为空');
+			return false;
+		}
+		var orderNo=document.getElementById("orderNo").value;
+		if(null==orderNo && ''==orderNo){
+			alert('错误提示：订单号不能为空');
+			return false;
+		}
+		var orderAmount=document.getElementById("orderAmount").value;
+		if(null==orderAmount && ''==orderAmount){
+			alert('错误提示：订单金额不能为空');
+			return false;
+		}
+		var orderDatetime=document.getElementById("orderDatetime").value;
+		if(null==orderDatetime && ''==orderDatetime){
+			alert('错误提示：订单创建时间不能为空');
+			return false;
+		}
+	}
+</script>
+</html>
